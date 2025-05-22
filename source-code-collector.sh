@@ -50,7 +50,7 @@ done
 # README.mdファイルが存在する場合、最初に追加
 if [ -f "README.md" ] && [ "$has_readme" = false ]; then
   echo "README.mdを最初に追加します。"
-  cat README.md >> "$output_file"
+  cat README.md > "$output_file"
   echo "---" >> "$output_file"
 fi
 
@@ -68,6 +68,7 @@ for file in "$@"; do
     continue
   fi
 
+  echo "---" >> "$output_file"
   echo "## ファイル: $file" >> "$output_file"
   cat "$file" >> "$output_file"
   echo " " >> "$output_file"  # ファイルの区切りとして空行を挿入
