@@ -12,6 +12,19 @@ echo_usage() {
   echo "i.e.) repo_snapshot.sh -o summary.md README.md src/pages/*.py"
 }
 
+# Fileの区切りを追加
+# - arg1: ファイル名
+# - arg2: 出力ファイル名
+add_file_separator() {
+  if [ ! -f "$2" ]; then
+    echo "出力ファイルが存在しません: $2" >&2
+    return 1
+  fi
+  echo "================================================" >> $2
+  echo "## FILE: $1" >> $2
+  echo "================================================" >> $2
+}
+
 # オプション解析
 while getopts "o:h" opt; do
   case $opt in
@@ -50,8 +63,10 @@ done
 # README.mdファイルが存在する場合、最初に追加
 if [ -f "README.md" ] && [ "$has_readme" = false ]; then
   echo "README.mdを最初に追加します。"
-  cat README.md > "$output_file"
-  echo "---" >> "$output_file"
+  echo "# $(pwd)" > "$output_file"
+  add_file_separator "README.md" "$output_file"
+  cat README.md >> "$output_file"
+  echo "" >> "$output_file"  # ファイルの区切りとして空行を挿入
 fi
 
 # 入力ファイルを処理
@@ -68,10 +83,10 @@ for file in "$@"; do
     continue
   fi
 
-  echo "---" >> "$output_file"
-  echo "## ファイル: $file" >> "$output_file"
+  # echo "---" >> "$output_file"
+  add_file_separator "$file" "$output_file"
   cat "$file" >> "$output_file"
-  echo " " >> "$output_file"  # ファイルの区切りとして空行を挿入
+  echo "" >> "$output_file"  # ファイルの区切りとして空行を挿入
 done
 
 echo "すべてのファイルが $output_file に結合されました。"
