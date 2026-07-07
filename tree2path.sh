@@ -14,11 +14,10 @@ EOF
 if [ "${1:-}" = "-h" ] || [ "${1:-}" = "--help" ]; then
   usage
   exit 0
-elif [ ! -f $1 ]; then
-    echo "Error: File not found: $1" >&2
-    usage
-    exit 1
-  fi
+elif [ $# -ge 1 ] && [ ! -f "$1" ]; then
+  echo "Error: File not found: $1" >&2
+  usage
+  exit 1
 fi
 
 # main routine
